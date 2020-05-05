@@ -6,7 +6,7 @@
 
     <groupId>com.digital.harrier</groupId>
     <artifactId>common</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <name>harrier-common</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,6 +56,11 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+            <version>3.1.46</version>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>
