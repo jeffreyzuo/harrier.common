@@ -30,6 +30,35 @@ public class JedisHelper implements JedisCommands{
         isCluster = true;
     }
 
+    public long publish(String channel,String message) {
+        if(isCluster) {
+            return jedisCluster.publish(channel,message);
+        }
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            return jedis.publish(channel,message);
+        } catch (Exception e){
+            return 0L;
+        } finally {
+            if(jedis != null) jedis.close();
+        }
+    }
+
+    public void subscribe(JedisPubSub jedisPubSub,String... channels) {
+        if(isCluster) {
+            jedisCluster.subscribe(jedisPubSub,channels);
+        } else {
+            Jedis jedis = null;
+            try {
+                jedis = jedisPool.getResource();
+                jedis.subscribe(jedisPubSub,channels);
+            } catch (Exception e){
+                return;
+            }
+        }
+    }
+
     @Override
     public String get(final String key) {
         if(isCluster) {
@@ -39,7 +68,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.get(key);
-        } finally {
+        } catch (Exception e){
+            return null;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -53,7 +84,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.set(s,s1);
-        } finally {
+        } catch (Exception e){
+            return "";
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -67,7 +100,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.set(s,s1,setParams);
-        } finally {
+        } catch (Exception e){
+            return "";
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -81,7 +116,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.exists(s);
-        } finally {
+        } catch (Exception e){
+            return false;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -185,7 +222,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.setnx(s,s1);
-        } finally {
+        } catch (Exception e){
+            return 0L;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -199,7 +238,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.setex(s,i,s1);
-        } finally {
+        } catch (Exception e){
+            return "";
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -223,7 +264,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.decr(s);
-        } finally {
+        } catch (Exception e){
+            return 0L;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -247,7 +290,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.incr(s);
-        } finally {
+        } catch (Exception e){
+            return 0L;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -341,7 +386,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.rpush(s,strings);
-        } finally {
+        } catch (Exception e){
+            return 0L;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -355,7 +402,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.lpush(s,strings);
-        } finally {
+        } catch (Exception e){
+            return 0L;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -369,7 +418,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.llen(s);
-        } finally {
+        } catch (Exception e){
+            return 0L;
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
@@ -408,7 +459,9 @@ public class JedisHelper implements JedisCommands{
         try {
             jedis = jedisPool.getResource();
             return jedis.lpop(s);
-        } finally {
+        } catch (Exception e){
+            return "";
+        }finally {
             if(jedis != null) jedis.close();
         }
     }
